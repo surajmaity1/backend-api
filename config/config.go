@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	SERVER_PORT    string
 	ENV            Environment
 	MYSQL_HOST     string
 	MYSQL_PORT     string
@@ -27,6 +28,7 @@ func init() {
 
 	AppConfig = Config{
 		ENV:            Environment(loadEnv("ENV")).Validate(),
+		SERVER_PORT:    loadEnv("SERVER_PORT"),
 		MYSQL_HOST:     loadEnv("MYSQL_HOST"),
 		MYSQL_PORT:     loadEnv("MYSQL_PORT"),
 		MYSQL_USER:     loadEnv("MYSQL_USER"),

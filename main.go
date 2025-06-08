@@ -1,10 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"backend-api/config"
+	"backend-api/routes"
 	_ "github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	fmt.Printf("Hello and welcome,")
+	logrus.Info("Server running on port " + config.AppConfig.SERVER_PORT)
+	routes.Listen(":" + config.AppConfig.SERVER_PORT)
 }
