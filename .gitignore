@@ -44,3 +44,4 @@ app.db
 # Binary
 /bin/*
 .idea/
+*.exe
