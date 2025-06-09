@@ -35,6 +35,10 @@ func init() {
 		MYSQL_PASS:     loadEnv("MYSQL_PASS"),
 		MYSQL_DATABASE: loadEnv("MYSQL_DATABASE"),
 	}
+
+	if mysqlDBConnected := dbConnect(); mysqlDBConnected == true {
+		fmt.Println("Successfully connected to MySQL DB")
+	}
 }
 
 func loadEnv(key string) string {

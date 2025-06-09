@@ -10,4 +10,5 @@ import (
 func main() {
 	logrus.Info("Server running on port " + config.AppConfig.SERVER_PORT)
 	routes.Listen(":" + config.AppConfig.SERVER_PORT)
+
 }
