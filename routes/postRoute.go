@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"backend-api/controllers"
 	"github.com/julienschmidt/httprouter"
+	_ "github.com/surajmaity1/backend-api/services"
 )
 
 func PostRoutes(router *httprouter.Router) {
-	router.POST("/post", controllers.HealthCheckHandler)
+	//router.POST("/post", services.AddPost)
 }

@@ -1,13 +1,13 @@
 package services
 
 import (
-	"backend-api/constants"
-	"backend-api/dtos"
 	"database/sql"
 	"fmt"
+	"github.com/surajmaity1/backend-api/constants"
+	"github.com/surajmaity1/backend-api/dtos"
 )
 
-func addPost(post dtos.Post) (int64, error) {
+func AddPost(post dtos.Post) (int64, error) {
 	db := sql.DB{}
 	result, err := db.Exec(constants.POST_INSERT_QUERY, post.PostContent, post.PostImage, post.PostedBy)
 	if err != nil {

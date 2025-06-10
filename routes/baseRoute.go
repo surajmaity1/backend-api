@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"backend-api/controllers"
 	"github.com/julienschmidt/httprouter"
+	"github.com/surajmaity1/backend-api/controllers"
 )
 
 func SetupBaseRoutes(router *httprouter.Router) {
