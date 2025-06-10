@@ -1,10 +1,10 @@
 package main
 
 import (
-	"backend-api/config"
-	"backend-api/routes"
 	_ "github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"github.com/surajmaity1/backend-api/config"
+	"github.com/surajmaity1/backend-api/routes"
 )
 
 func main() {

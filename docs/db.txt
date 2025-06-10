@@ -1,0 +1,12 @@
+create database backend_api;
+
+use backend_api;
+CREATE TABLE posts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_content VARCHAR(255) NOT NULL ,
+    post_image VARCHAR(255) DEFAULT NULL,
+    posted_by VARCHAR(255) NOT NULL
+);
+select * FROM posts;
+# DROP TABLE posts;
+DESC posts;

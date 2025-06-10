@@ -1,4 +1,4 @@
-module backend-api
+module github.com/surajmaity1/backend-api
 
 go 1.24
 

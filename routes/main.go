@@ -9,6 +9,7 @@ import (
 func Listen(listenAddress string) {
 	router := httprouter.New()
 	SetupBaseRoutes(router)
+	PostRoutes(router)
 	err := http.ListenAndServe(listenAddress, router)
 	if err != nil {
 		logrus.Fatal(err)

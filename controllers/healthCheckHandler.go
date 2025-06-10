@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"backend-api/utils"
 	"github.com/julienschmidt/httprouter"
+	"github.com/surajmaity1/backend-api/utils"
 	"net/http"
 	"time"
 )

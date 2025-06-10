@@ -45,3 +45,5 @@ app.db
 /bin/*
 .idea/
 *.exe
+
+tmp/
