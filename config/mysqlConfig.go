@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func dbConnect() bool {
+func DBConnect() (bool, *sql.DB) {
 	mysqlConfig := mysql.NewConfig()
 	mysqlConfig.User = AppConfig.MYSQL_USER
 	mysqlConfig.Passwd = AppConfig.MYSQL_PASS
@@ -24,6 +24,6 @@ func dbConnect() bool {
 	if pingErr != nil {
 		logrus.Fatal(pingErr)
 	}
-	
-	return true
+
+	return true, db
 }
