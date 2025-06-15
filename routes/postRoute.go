@@ -8,4 +8,5 @@ import (
 func PostRoutes(router *httprouter.Router) {
 	router.POST("/posts", controllers.CreatePost)
 	router.GET("/posts/:id", controllers.GetPost)
+	router.PATCH("/posts/:id", controllers.EditPost)
 }

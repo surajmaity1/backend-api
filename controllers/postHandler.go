@@ -18,6 +18,7 @@ func CreatePost(response http.ResponseWriter, request *http.Request, params http
 
 	if err := json.NewDecoder(request.Body).Decode(&requestBody); err != nil {
 		http.Error(response, err.Error(), http.StatusBadRequest)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusBadRequest, err.Error()))
 		return
 	}
 
@@ -71,4 +72,47 @@ func GetPost(response http.ResponseWriter, request *http.Request, params httprou
 
 	response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(post)
+}
+
+func EditPost(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	response.Header().Add("Content-Type", "application/json")
+	postId := params.ByName("id")
+	id, err := strconv.ParseInt(postId, 10, 64)
+
+	if err != nil {
+		logrus.Error(err)
+		response.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusBadRequest, "Invalid post id"))
+		return
+	}
+
+	_, err = services.GetPost(request.Context(), id)
+
+	if err != nil {
+		logrus.Error(err)
+		if errors.Is(err, sql.ErrNoRows) {
+			response.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusNotFound, "Post not found"))
+			return
+		}
+	}
+
+	var requestBody dtos.PostRequest
+
+	if err := json.NewDecoder(request.Body).Decode(&requestBody); err != nil {
+		http.Error(response, err.Error(), http.StatusBadRequest)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	editedPost, err := services.EditPost(request.Context(), id, requestBody)
+
+	responseBody := dtos.PostResponse{
+		Id:          editedPost.Id,
+		PostContent: editedPost.PostContent,
+		PostImage:   editedPost.PostImage,
+		PostedBy:    editedPost.PostedBy,
+	}
+	response.WriteHeader(http.StatusOK)
+	json.NewEncoder(response).Encode(responseBody)
 }

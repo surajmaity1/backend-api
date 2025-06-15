@@ -1,7 +1,7 @@
 package dtos
 
 type Post struct {
-	Id          string `json:"id"`
+	Id          int64  `json:"id"`
 	PostContent string `json:"post_content"`
 	PostImage   string `json:"post_image"`
 	PostedBy    string `json:"posted_by"`
