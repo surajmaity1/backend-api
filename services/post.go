@@ -2,6 +2,8 @@ package services
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"github.com/sirupsen/logrus"
 	"github.com/surajmaity1/backend-api/config"
 	"github.com/surajmaity1/backend-api/constants"
@@ -23,43 +25,17 @@ func CreatePost(context context.Context, post dtos.PostRequest) (int64, error) {
 	return id, err
 }
 
-//
-//func GetPost(postId int64) {
-//	var posts []dtos.Post
-//	_, db := config.DBConnect()
-//
-//	rows, err := db.Query("select * from posts where id = ?", postId)
-//
-//	if err != nil {
-//		logrus.Error("Error while executing Query query")
-//	}
-//
-//	for rows.Next() {
-//		var post dtos.Post
-//		if err := rows.Scan(&post.Id, &post.PostContent, &post.PostImage, &post.PostedBy); err != nil {
-//			logrus.Error("Error while executing Scan query")
-//		}
-//		posts = append(posts, post)
-//	}
-//
-//	fmt.Println(posts)
-//
-//	if err := rows.Err(); err != nil {
-//		logrus.Error("Error while executing Err query")
-//	}
-//	defer rows.Close()
-//}
-//
-//func AddPost(post dtos.Post) (int64, error) {
-//	db := sql.DB{}
-//	result, err := db.Exec(constants.POST_INSERT_QUERY, post.PostContent, post.PostImage, post.PostedBy)
-//	if err != nil {
-//		return 0, fmt.Errorf("addPost: %v", err)
-//	}
-//
-//	id, err := result.LastInsertId()
-//	if err != nil {
-//		return 0, fmt.Errorf("addPost: %v", err)
-//	}
-//	return id, nil
-//}
+func GetPost(context context.Context, postId int64) (*dtos.Post, error) {
+	_, db := config.DBConnect()
+	var post dtos.Post
+	err := db.QueryRowContext(context, constants.POST_SINGLE_FETCH_QUERY, postId).Scan(&post.Id, &post.PostContent, &post.PostImage, &post.PostedBy)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, err
+		}
+		logrus.Error(err)
+	}
+
+	return &post, nil
+}

@@ -6,6 +6,6 @@ import (
 )
 
 func PostRoutes(router *httprouter.Router) {
-	router.POST("/post", controllers.CreatePost)
-	//router.GET("/post", controllers.GetPost)
+	router.POST("/posts", controllers.CreatePost)
+	router.GET("/posts/:id", controllers.GetPost)
 }

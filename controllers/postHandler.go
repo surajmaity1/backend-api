@@ -1,13 +1,16 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 	"github.com/surajmaity1/backend-api/dtos"
 	"github.com/surajmaity1/backend-api/services"
 	"net/http"
+	"strconv"
 )
 
 func CreatePost(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
@@ -20,13 +23,15 @@ func CreatePost(response http.ResponseWriter, request *http.Request, params http
 
 	var validate = validator.New()
 	if err := validate.Struct(requestBody); err != nil {
-		http.Error(response, err.Error(), http.StatusBadRequest)
+		logrus.Error(err)
+		response.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusBadRequest, err.Error()))
 	}
 
 	postId, err := services.CreatePost(request.Context(), requestBody)
 	if err != nil {
 		logrus.Error(err)
-		http.Error(response, "Internal server error", http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusInternalServerError, err.Error()))
 		return
 	}
 
@@ -41,18 +46,29 @@ func CreatePost(response http.ResponseWriter, request *http.Request, params http
 	json.NewEncoder(response).Encode(responseBody)
 }
 
-//func GetPost(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
-//	body, err := io.ReadAll(request.Body)
-//	fmt.Println(string(body))
-//
-//	if err != nil {
-//		logrus.Error(err)
-//		http.Error(response, "Internal server error", http.StatusInternalServerError)
-//		return
-//	}
-//
-//	services.GetPost(1)
-//
-//	response.Header().Add("Content-Type", "application/json")
-//	response.WriteHeader(http.StatusOK)
-//}
+func GetPost(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	response.Header().Add("Content-Type", "application/json")
+	postId := params.ByName("id")
+	id, err := strconv.ParseInt(postId, 10, 64)
+
+	if err != nil {
+		logrus.Error(err)
+		response.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusBadRequest, "Invalid post id"))
+		return
+	}
+
+	post, err := services.GetPost(request.Context(), id)
+
+	if err != nil {
+		logrus.Error(err)
+		if errors.Is(err, sql.ErrNoRows) {
+			response.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(response).Encode(dtos.CustomErrorResponse(http.StatusNotFound, "Post not found"))
+			return
+		}
+	}
+
+	response.WriteHeader(http.StatusOK)
+	json.NewEncoder(response).Encode(post)
+}
