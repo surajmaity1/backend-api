@@ -36,7 +36,7 @@ func init() {
 		MYSQL_DATABASE: loadEnv("MYSQL_DATABASE"),
 	}
 
-	if mysqlDBConnected := dbConnect(); mysqlDBConnected == true {
+	if mysqlDBConnected, _ := DBConnect(); mysqlDBConnected == true {
 		fmt.Println("Successfully connected to MySQL DB")
 	}
 }
